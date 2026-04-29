@@ -1,0 +1,19 @@
+{
+  "name": "movieflix2.0",
+  "version": "2.0.0",
+  "description": "Moview Reservation System that allows users to reserve movie tickets",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Simply-Incognito/MovieFlix2.0.git"
+  },
+  "author": "Simply_",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Simply-Incognito/MovieFlix2.0/issues"
+  },
+  "homepage": "https://github.com/Simply-Incognito/MovieFlix2.0#readme"
+}
