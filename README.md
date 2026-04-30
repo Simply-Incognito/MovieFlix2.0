@@ -78,16 +78,16 @@ MovieFlix 2.0 is a robust, production-ready backend system for a movie reservati
    npm run dev
    ```
 
----
+--- 
 
 ## 🛣️ API Roadmap (Coming Soon)
 
-- `POST /api/auth/register` - User signup
-- `POST /api/auth/login` - User login
-- `GET /api/movies` - List all movies
-- `POST /api/movies` - Add a movie (Admin)
-- `GET /api/showtimes?date=YYYY-MM-DD` - Get showtimes
-- `POST /api/reservations` - Book a seat
+- `POST /api/v2/auth/register` - User signup
+- `POST /api/v2/auth/login` - User login
+- `GET /api/v2/movies` - List all movies
+- `POST /api/v2/movies` - Add a movie (Admin)
+- `GET /api/v2/showtimes?date=YYYY-MM-DD` - Get showtimes
+- `POST /api/v2/reservations` - Book a seat
 
 ---
 
