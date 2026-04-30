@@ -35,7 +35,7 @@ const duplicateKeyErrorHandler = (error) => {
 }
 
 const validationErrorHandler = (error) => {
-    const errMsg = `${(Object.keys(error.errors))[0]} is required!`;
+    const errMsg = `${(Object.keys(error.errors))[0]} is required!`;    
     return new CustomError(errMsg, 400);
 }
 

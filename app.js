@@ -10,7 +10,6 @@ const app = express();
 // Middlewares
 app.use(express.json());
 
-
 // Routers
 const authRouter = require(`${__dirname}/Routes/authRoute`);
 const userRouter = require(`${__dirname}/Routes/userRoute`);

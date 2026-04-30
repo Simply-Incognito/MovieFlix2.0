@@ -51,14 +51,12 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
     }
 
     // Get User
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email: email }).select('+password');
 
     // Verify If User Exists
     if (!user) {
         return next(new CustomError("Account does not exist. Please register an account.", 404));
     }
-
-    console.log(password)
 
     // Verify if password is correct
     const isPasswordMatch = await user.validateUserPassword(password, user.password);
@@ -90,4 +88,15 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
         data: { user },
         token
     });
+});
+
+// Restrict - RBAC -> roles(admin, user)
+exports.restrict = asyncErrorHandler(async (req, res, next) => {
+    const role = req.user.role;
+
+    if (role !== "admin") {
+        return next(new CustomError("You are not allowed to perform this action!", 403));
+    }
+
+    next();
 });

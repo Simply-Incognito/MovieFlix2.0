@@ -20,9 +20,11 @@ const movieSchema = mongoose.Schema({
         trim: true,
         required: [true, "Movie Genre is required!"],
         enum: ["drama", "comedy", "action", "horror", "sci-fi", "thriller", "fantasy", "sports", "apocalypse", "romance", "western", "martial arts"]
-    },
-    showtime: {
-        type: Date,
-        required: [true, "Movie showtime is required!"]
     }
 });
+
+
+const Movie = mongoose.model('Movie', movieSchema);
+
+
+module.exports = Movie;

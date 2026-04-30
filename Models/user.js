@@ -79,8 +79,18 @@ userSchema.pre('save', async function () {
 });
 
 // Validate User Password
-userSchema.methods.validateUserPassword = async function(password, hash) {
+userSchema.methods.validateUserPassword = async function (password, hash) {
     return await bcrypt.compare(password, hash);
+}
+
+//
+userSchema.methods.isPasswordModified = function (JWTIssueTime) {
+    if (this.passwordChangedAt) {
+        return (this.passwordChangedAt > JWTIssueTime);
+    }
+
+    return false;
+
 }
 
 // Model
