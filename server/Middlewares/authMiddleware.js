@@ -7,6 +7,8 @@ const CustomError = require(`${__dirname}/../Utils/CustomError`);
 
 // User Model
 const User = require(`${__dirname}/../Models/user`);
+
+// Protect Routes
 exports.protect = asyncErrorHandler(async (req, res, next) => {
     // Check if token exists
     var token;
