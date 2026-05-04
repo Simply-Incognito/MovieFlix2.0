@@ -12,18 +12,21 @@ MovieFlix 2.0 is a robust, production-ready backend system for a movie reservati
 - **Admin Management:** Automatic super-admin setup on server start, with the ability for admins to promote other users.
 
 ### 🎥 Movie & Showtime Management
-- **Movie CRUD:** Admins can add, update, and delete movies. Anyone can view them.
-- **Showtime Scheduling:** Admins manage showtimes for every movie, including room capacity and pricing.
-- **Dynamic Browsing:** Users can view movies and their specific showtimes.
+- **Soft Deletes:** Movies are never fully removed from the database; they are deactivated to preserve historical reservation data.
+- **Movie CRUD:** Admins can manage the movie catalog. Users only see active movies.
+- **Showtime Scheduling:** Admins manage showtimes, ensuring movies are only scheduled in compatible rooms.
+
+### 🏠 Room Management
+- **Dynamic Theaters:** Manage different theater rooms with unique capacities and types (Standard, VIP, Premium).
+- **Compatibility Checks:** Validation logic ensures movies are only aired in designated rooms.
 
 ### 🎟️ Reservation System
-- **Interactive Seat Selection:** Real-time visibility of available seats to prevent overbooking.
-- **Booking Management:** Users can track their own reservation history and cancel upcoming bookings.
-- **Anti-Overbooking Logic:** Robust backend validation to ensure seats aren't double-booked.
+- **Atomic Transactions:** Uses MongoDB Sessions to prevent race conditions and ensure seats are never double-booked.
+- **Interactive Seat Selection:** Real-time visibility of available seats based on room capacity.
+- **Booking Management:** Users can track their history and cancel reservations up to **24 hours** before the showtime.
 
 ### 📊 Admin Reporting & Metrics
-- **Performance Analytics:** Admins can view system-wide metrics including total reservations, total revenue, overall capacity, and occupancy rates.
-- **Global Overview:** Access to all reservations across the entire system.
+- **Performance Analytics:** Admins can view system-wide metrics including total reservations, total revenue, overall capacity, and occupancy rates using MongoDB Aggregation.
 
 ---
 
@@ -31,10 +34,9 @@ MovieFlix 2.0 is a robust, production-ready backend system for a movie reservati
 
 - **Runtime:** Node.js
 - **Framework:** Express.js
-- **Database:** MongoDB
+- **Database:** MongoDB (Replica Set required for Transactions)
 - **ORM:** Mongoose
 - **Auth:** JWT (JSON Web Tokens) & Bcrypt
-- **Environment Management:** dotenv
 
 ---
 
@@ -43,8 +45,9 @@ MovieFlix 2.0 is a robust, production-ready backend system for a movie reservati
 | Entity | Description |
 | :--- | :--- |
 | **User** | Stores credentials, profile info, and roles (`admin`/`user`). |
-| **Movie** | Contains metadata like title, description, genre, and duration. |
-| **Showtime** | Maps a Movie to a specific time, theater/room, capacity, and price. |
+| **Movie** | Metadata like title, duration, and genre. Supports soft-deletion via `active` flag. |
+| **Room** | Defines theater capacity, type, and allowed movies. |
+| **Showtime** | Links a Movie to a Room and specific time. |
 | **Reservation** | Links a User to a Showtime and a specific seat number. |
 
 ---
@@ -53,7 +56,7 @@ MovieFlix 2.0 is a robust, production-ready backend system for a movie reservati
 
 ### Prerequisites
 - Node.js (v16+)
-- MongoDB (Local or Atlas)
+- MongoDB configured as a **Replica Set** (Required for Transactions)
 
 ### Installation
 1. Clone the repository:
@@ -68,7 +71,7 @@ MovieFlix 2.0 is a robust, production-ready backend system for a movie reservati
 3. Set up your environment variables (`config.env`):
    ```env
    PORT=5000
-   LOCAL_DB_URI=mongodb://localhost:27017/movieflix
+   LOCAL_DB_URI=mongodb://127.0.0.1:27017/movieflix?replicaSet=rs0
    JWT_SECRET=your_super_secret_key
    JWT_EXPIRES_IN=90d
    ```
@@ -77,9 +80,6 @@ MovieFlix 2.0 is a robust, production-ready backend system for a movie reservati
    npm run dev
    ```
 
-> [!NOTE]
-> **Admin Seeding:** The system automatically attempts to create a super-admin user from `data/users.json` when the server starts. Ensure the server is running to complete this process.
-
 ---
 
 ## 🛣️ API Endpoints
@@ -87,42 +87,31 @@ MovieFlix 2.0 is a robust, production-ready backend system for a movie reservati
 ### Authentication & Users
 - `POST /api/v2/auth/register` - Register a new user.
 - `POST /api/v2/auth/login` - Login and receive a JWT.
-- `POST /api/v2/auth/promote/:id` - Promote a user to `admin` (Admin only).
+- `POST /api/v2/auth/promote/:id` - Promote a user to `admin`.
+
+### Rooms (Admin Only)
+- `GET /api/v2/rooms` - List all rooms.
+- `POST /api/v2/rooms` - Add a new room.
+- `PATCH /api/v2/rooms/:id` - Update room details.
 
 ### Movies
-- `GET /api/v2/movies` - List all movies.
-- `GET /api/v2/movies/:id` - Get details of a specific movie.
-- `POST /api/v2/movies` - Add a new movie (Admin only).
-- `PATCH /api/v2/movies/:id` - Update movie details (Admin only).
-- `DELETE /api/v2/movies/:id` - Remove a movie (Admin only).
+- `GET /api/v2/movies` - List active movies.
+- `POST /api/v2/movies` - Add a new movie (Admin).
+- `DELETE /api/v2/movies/:id` - Soft-delete a movie (Admin).
 
 ### Showtimes
-- `GET /api/v2/showtimes` - List all showtimes.
-- `POST /api/v2/showtimes` - Create a new showtime (Admin only).
-- `GET /api/v2/showtimes/:id/seats` - Get available/occupied seats for a showtime.
+- `GET /api/v2/showtimes` - List showtimes (supports `?date=` filter).
+- `POST /api/v2/showtimes` - Create a showtime (Admin).
+- `GET /api/v2/showtimes/:id/seats` - Get available seats.
 
 ### Reservations
-- `GET /api/v2/reservations` - Get all reservations for the logged-in user.
-- `POST /api/v2/reservations` - Book a seat for a showtime.
-- `DELETE /api/v2/reservations/:id` - Cancel a reservation.
-- `GET /api/v2/reservations/metrics` - View system-wide metrics (Admin only).
-
----
-
-## 📂 Project Structure
-
-```text
-server/
-├── Controllers/    # Request handlers & business logic
-├── Models/         # Mongoose schemas
-├── Routes/         # API route definitions
-├── Middlewares/    # Auth & error handling logic
-├── Utils/          # Helper functions & database connection
-├── data/           # Seed data
-└── app.js          # Express app configuration
-```
+- `POST /api/v2/reservations` - Book a seat (Atomic Transaction).
+- `GET /api/v2/reservations` - User reservation history.
+- `DELETE /api/v2/reservations/:id` - Cancel (Min. 24h before show).
+- `GET /api/v2/reservations/metrics` - System metrics (Admin).
 
 ---
 
 ## 📄 License
 This project is licensed under the **ISC License**.
+
