@@ -32,7 +32,7 @@ app.use((req, res) => {
 });
 
 // Handle Global Errors
-app.use(globalErrorHandler)
+app.use(globalErrorHandler);
 
 
 module.exports = app;

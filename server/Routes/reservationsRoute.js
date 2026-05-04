@@ -13,7 +13,7 @@ router.route('/')
     .get(authMiddleware.protect, reservationsController.getAllReservations);
 
 router.route('/metrics')
-    .get(authMiddleware.protect, authMiddleware.restrictTo('Admin'), reservationsController.getReservationsMetrics);
+    .get(authMiddleware.protect, authMiddleware.restrictTo('admin'), reservationsController.getReservationsMetrics);
 
 router.route('/:id')
     .delete(authMiddleware.protect, reservationsController.cancelReservation);

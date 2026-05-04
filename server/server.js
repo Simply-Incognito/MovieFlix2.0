@@ -12,6 +12,8 @@ const app = require(`${__dirname}/app`);
 // Connect To DB
 connectDB(process.env.LOCAL_DB_URI);
 
+require(`${__dirname}/Utils/Loader`).loadSuperAdmin();
+
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {

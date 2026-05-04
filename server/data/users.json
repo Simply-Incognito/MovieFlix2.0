@@ -1,0 +1,12 @@
+[
+  {
+    "firstname": "Simply",
+    "lastname": "Xero",
+    "username": "notxero12",
+    "email": "simplyxero12@gmail.com",
+    "gender": "male",
+    "password": "simplyxero1234",
+    "confirmPassword": "simplyxero1234",
+    "role": "admin"
+  }
+]

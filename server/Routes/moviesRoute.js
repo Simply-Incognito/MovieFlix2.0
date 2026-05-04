@@ -8,11 +8,11 @@ const router = require('express').Router();
 
 router.route('/')
     .get(movieController.getAllMovies)
-    .post(authMiddleware.protect, authMiddleware.restrictTo('Admin'), movieController.addMovie);
+    .post(authMiddleware.protect, authMiddleware.restrictTo('admin'), movieController.addMovie);
 
 router.route('/:id')
     .get(movieController.getMovie)
-    .patch(authMiddleware.protect, authMiddleware.restrictTo('Admin'), movieController.updateMovie)
-    .delete(authMiddleware.protect, authMiddleware.restrictTo('Admin'), movieController.deleteMovie);
+    .patch(authMiddleware.protect, authMiddleware.restrictTo('admin'), movieController.updateMovie)
+    .delete(authMiddleware.protect, authMiddleware.restrictTo('admin'), movieController.deleteMovie);
 
 module.exports = router;

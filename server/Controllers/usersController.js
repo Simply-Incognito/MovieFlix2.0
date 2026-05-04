@@ -12,7 +12,7 @@ exports.promoteUser = asyncErrorHandler(async (req, res, next) => {
         return next(new CustomError("User not found!", 404));
     }
 
-    user.role = "Admin";
+    user.role = "admin";
     await user.save({ validateBeforeSave: false });
 
     res.status(200).json({
