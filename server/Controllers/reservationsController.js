@@ -82,11 +82,15 @@ exports.getAllReservations = asyncErrorHandler(async (req, res, next) => {
 
 // User
 exports.cancelReservation = asyncErrorHandler(async (req, res, next) => {
-    // Check if reservation exists 
+    // Check if reservation exists
     const reservation = await Reservation.findById(req.params.id);
 
     if (!reservation) {
         return next(new CustomError("Reservation not found!", 404));
+    }
+
+    if (reservation.user.toString() !== req.user.id.toString()) {
+        return next(new CustomError("You are not authorized to cancel this reservation.", 403));
     }
 
     const showtime = await Showtime.findById(reservation.showtime);

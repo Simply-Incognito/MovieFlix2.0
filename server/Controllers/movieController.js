@@ -81,7 +81,8 @@ exports.updateMovie = asyncErrorHandler(async (req, res, next) => {
 // Admin only
 exports.deleteMovie = asyncErrorHandler(async (req, res, next) => {
 
-    const deletedMovie = await Movie.findByIdAndDelete(req.params.id);
+    // soft delete the movie (deactivate)
+    const deletedMovie = await Movie.findByIdAndUpdate(req.params.id, { active: false });
 
     if (!deletedMovie) {
         return next(new CustomError("Movie not found.", 404));

@@ -9,10 +9,13 @@ const showtimeController = require(`${__dirname}/../Controllers/showtimesControl
 const router = require('express').Router();
 
 router.route('/')
-    .post(authMiddleware.protect, authMiddleware.restrictTo('admin'), showtimeController.createShowtime)
-    .get(authMiddleware.protect, showtimeController.getShowtimes);
+    .get(authMiddleware.protect, showtimeController.getShowtimes)
+    .post(authMiddleware.protect, authMiddleware.restrictTo('admin'), showtimeController.createShowtime);
 
 router.route('/:id/seats')
     .get(authMiddleware.protect, showtimeController.getShowtimeSeats);
+
+router.route('/:id')
+    .delete(authMiddleware.protect, authMiddleware.restrictTo('admin'), showtimeController.deleteShowtime);
 
 module.exports = router;

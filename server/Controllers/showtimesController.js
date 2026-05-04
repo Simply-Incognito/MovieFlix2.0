@@ -54,7 +54,7 @@ exports.getShowtimes = asyncErrorHandler(async (req, res, next) => {
 
     if (req.query.date) {
         const date = new Date(req.query.date);
-        
+
         // Check if date is valid
         if (isNaN(date.getTime())) {
             return next(new CustomError("Invalid date format. Please use YYYY-MM-DD.", 400));
@@ -95,7 +95,7 @@ exports.getShowtimeSeats = asyncErrorHandler(async (req, res, next) => {
 
     // Get all reservations (booked seats) for this showtime
     const reservations = await Reservation.find({ showtime: req.params.id }).select('seat');
-    
+
     const reservedSeats = reservations.map(res => res.seat);
 
     // Generate all available seats based on capacity
@@ -116,3 +116,24 @@ exports.getShowtimeSeats = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
+
+// Admin only
+exports.deleteShowtime = asyncErrorHandler(async (req, res, next) => {
+    // Before deleting, check if there are any reservations for this showtime
+    const reservations = await Reservation.find({ showtime: req.params.id });
+
+    if (reservations.length > 0) {
+        return next(new CustomError("Showtime cannot be deleted as there are reservations for it!", 400));
+    }
+
+    const showtime = await Showtime.findByIdAndDelete(req.params.id);
+
+    if (!showtime) {
+        return next(new CustomError("Showtime not found!", 404));
+    }
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Showtime deleted successfully!'
+    });
+});
