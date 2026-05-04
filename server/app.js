@@ -3,12 +3,47 @@
 const express = require('express');
 
 const globalErrorHandler = require(`${__dirname}/Controllers/errorHandler`);
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+
 
 
 const app = express();
 
 // Middlewares
 app.use(express.json());
+
+// Swagger Configuration
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'MovieFlix 2.0 API',
+            version: '1.0.0',
+            description: 'API documentation for MovieFlix 2.0 reservation system',
+        },
+        servers: [
+            {
+                url: 'http://localhost:5000',
+                description: 'Development Server'
+            },
+        ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
+        },
+    },
+    apis: [`${__dirname}/Routes/*.js`],
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 // Routers
 const authRouter = require(`${__dirname}/Routes/authRoute`);

@@ -6,6 +6,17 @@ This project is an implementation of the [Movie Reservation System](https://road
 
 ---
 
+## 📖 API Documentation (Swagger)
+
+The API is fully documented using Swagger. You can explore the endpoints, view request/response schemas, and test the API directly from your browser.
+
+- **URL:** [http://localhost:5000/api-docs](http://localhost:5000/api-docs)
+
+> [!TIP]
+> To test protected routes in Swagger, use the **Authorize** button and enter your JWT token (obtained from the login endpoint) in the format: `Bearer <your_token>`.
+
+---
+
 ## 🚀 Key Features
 
 ### 👤 User Authentication & Authorization

@@ -4,7 +4,8 @@
   "description": "Moview Reservation System that allows users to reserve movie tickets",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/Simply-Incognito/MovieFlix2.0/issues"
   },
-  "homepage": "https://github.com/Simply-Incognito/MovieFlix2.0#readme"
+  "homepage": "https://github.com/Simply-Incognito/MovieFlix2.0#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
 }
