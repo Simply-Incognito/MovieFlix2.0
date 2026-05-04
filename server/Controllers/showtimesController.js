@@ -8,6 +8,9 @@ const CustomError = require(`${__dirname}/../Utils/CustomError`);
 const Showtime = require(`${__dirname}/../Models/showtime`);
 
 const Movie = require(`${__dirname}/../Models/movie`);
+
+const Room = require(`${__dirname}/../Models/room`);
+
 const Reservation = require(`${__dirname}/../Models/reservation`);
 
 // Admin only
@@ -20,6 +23,17 @@ exports.createShowtime = asyncErrorHandler(async (req, res, next) => {
 
     if (!movie) {
         return next(new CustomError("Failed: Movie Not Found.", 404));
+    }
+
+    // check if movie would air in the room
+    const room = await Room.findById(req.body.room);
+
+    if (!room) {
+        return next(new CustomError("Failed: Room Not Found.", 404));
+    }
+
+    if (!room.movies.includes(movieRef)) {
+        return next(new CustomError("Failed: Movie would not air in this room.", 400));
     }
 
     // Ensure movie field is correctly set
@@ -73,7 +87,7 @@ exports.getShowtimes = asyncErrorHandler(async (req, res, next) => {
 
 // User + Admin
 exports.getShowtimeSeats = asyncErrorHandler(async (req, res, next) => {
-    const showtime = await Showtime.findById(req.params.id);
+    const showtime = await Showtime.findById(req.params.id).populate('room', 'capacity');
 
     if (!showtime) {
         return next(new CustomError("Showtime not found!", 404));
@@ -85,7 +99,7 @@ exports.getShowtimeSeats = asyncErrorHandler(async (req, res, next) => {
     const reservedSeats = reservations.map(res => res.seat);
 
     // Generate all available seats based on capacity
-    const totalSeats = showtime.capacity || 50;
+    const totalSeats = showtime.room.capacity;
     const availableSeats = [];
 
     for (let i = 1; i <= totalSeats; i++) {

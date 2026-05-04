@@ -13,16 +13,13 @@ const showtimeSchema = mongoose.Schema({
         unique: true
     },
     room: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Room",
         required: [true, "Room/Theater is required!"]
     },
     price: {
         type: Number,
         required: [true, "Price is required!"]
-    },
-    capacity: {
-        type: Number,
-        default: 50
     }
 });
 
