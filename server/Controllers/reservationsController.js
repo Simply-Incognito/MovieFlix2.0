@@ -22,6 +22,21 @@ exports.makeReservation = asyncErrorHandler(async (req, res, next) => {
     try {
         // 2. Start Transaction
         await session.withTransaction(async () => {
+            // Check if seat number exists in the room
+            const showtime = await Showtime.findOne({ _id: req.body.showtime })
+                .select('room movie')
+                .populate('movie')
+                .populate('room', 'capacity');
+
+            // return console.log(showtime)
+
+            if (!showtime || !showtime.movie) {
+                throw new CustomError("This showtime or movie is no longer available.", 404);
+            }
+
+            if (req.body.seat < 1 || req.body.seat > showtime.room.capacity) {
+                throw new CustomError(`Invalid seat number! Seat number must be between 1 and ${showtime.room.capacity}.`, 400);
+            }
 
             req.body.user = req.user._id;
 
