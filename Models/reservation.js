@@ -4,17 +4,16 @@ const mongoose = require('mongoose');
 
 const reservationSchema = mongoose.Schema({
     user: {
-        type: mongoose.Schema.Types.ObjectId, ref: "User",
-        unique: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     },
     showtime: {
-        type: mongoose.Schema.Types.ObjectId, ref: "Showtime",
-        unique: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Showtime"
     },
-    seatNumber: {
+    seat: {
         type: Number,
-        required: [true, "Seat Number is required!"],
-        unique: true
+        required: [true, "Seat Number is required!"]
     }
 });
 

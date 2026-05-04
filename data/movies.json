@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Inception",
+    "description": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+    "genre": "sci-fi",
+    "posterImage": "https://example.com/inception.jpg"
+  },
+  {
+    "title": "The Shawshank Redemption",
+    "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+    "genre": "drama",
+    "posterImage": "https://example.com/shawshank.jpg"
+  },
+  {
+    "title": "The Dark Knight",
+    "description": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+    "genre": "action",
+    "posterImage": "https://example.com/darkknight.jpg"
+  },
+  {
+    "title": "Get Out",
+    "description": "A young African-American visits his white girlfriend's parents for the weekend, where his simmering uneasiness about their reception of him eventually reaches a boiling point.",
+    "genre": "horror",
+    "posterImage": "https://example.com/getout.jpg"
+  },
+  {
+    "title": "Interstellar",
+    "description": "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+    "genre": "sci-fi",
+    "posterImage": "https://example.com/interstellar.jpg"
+  }
+]

@@ -14,10 +14,14 @@ app.use(express.json());
 const authRouter = require(`${__dirname}/Routes/authRoute`);
 const userRouter = require(`${__dirname}/Routes/userRoute`);
 const moviesRouter = require(`${__dirname}/Routes/moviesRoute`);
+const showtimeRouter = require(`${__dirname}/Routes/showtimesRoute`);
+const reservationsRouter = require(`${__dirname}/Routes/reservationsRoute`);
 
 app.use('/api/v2/auth', authRouter);
 app.use('/api/v2/auth', userRouter);
 app.use('/api/v2/movies', moviesRouter);
+app.use('/api/v2/showtimes', showtimeRouter);
+app.use('/api/v2/reservations', reservationsRouter);
 
 // Default Routes
 app.use((req, res) => {

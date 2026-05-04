@@ -1,0 +1,102 @@
+[
+  {
+    "firstname": "Simply",
+    "lastname": "Xero",
+    "username": "notxero12",
+    "email": "simplyxero12@gmail.com",
+    "gender": "male",
+    "password": "simplyxero1234",
+    "confirmPassword": "simplyxero1234",
+    "role": "admin"
+  },
+  {
+    "firstname": "Jane",
+    "lastname": "Doe",
+    "username": "janedoe",
+    "email": "jane@example.com",
+    "gender": "female",
+    "password": "password12345",
+    "confirmPassword": "password12345",
+    "role": "admin"
+  },
+  {
+    "firstname": "John",
+    "lastname": "Smith",
+    "username": "johnsmith",
+    "email": "john@example.com",
+    "gender": "male",
+    "password": "password12345",
+    "confirmPassword": "password12345",
+    "role": "user"
+  },
+  {
+    "firstname": "Alice",
+    "lastname": "Johnson",
+    "username": "alicej",
+    "email": "alice@example.com",
+    "gender": "female",
+    "password": "password12345",
+    "confirmPassword": "password12345",
+    "role": "user"
+  },
+  {
+    "firstname": "Bob",
+    "lastname": "Brown",
+    "username": "bobbrown",
+    "email": "bob@example.com",
+    "gender": "male",
+    "password": "password12345",
+    "confirmPassword": "password12345",
+    "role": "user"
+  },
+  {
+    "firstname": "Charlie",
+    "lastname": "Davis",
+    "username": "charlied",
+    "email": "charlie@example.com",
+    "gender": "male",
+    "password": "password12345",
+    "confirmPassword": "password12345",
+    "role": "user"
+  },
+  {
+    "firstname": "Diana",
+    "lastname": "Prince",
+    "username": "dianap",
+    "email": "diana@example.com",
+    "gender": "female",
+    "password": "password12345",
+    "confirmPassword": "password12345",
+    "role": "user"
+  },
+  {
+    "firstname": "Eve",
+    "lastname": "Online",
+    "username": "eveo",
+    "email": "eve@example.com",
+    "gender": "female",
+    "password": "password12345",
+    "confirmPassword": "password12345",
+    "role": "user"
+  },
+  {
+    "firstname": "Frank",
+    "lastname": "Castle",
+    "username": "punisher",
+    "email": "frank@example.com",
+    "gender": "male",
+    "password": "password12345",
+    "confirmPassword": "password12345",
+    "role": "user"
+  },
+  {
+    "firstname": "Grace",
+    "lastname": "Hopper",
+    "username": "ghopper",
+    "email": "grace@example.com",
+    "gender": "female",
+    "password": "password12345",
+    "confirmPassword": "password12345",
+    "role": "user"
+  }
+]

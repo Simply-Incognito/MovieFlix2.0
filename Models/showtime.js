@@ -4,15 +4,21 @@ const mongoose = require('mongoose');
 
 const showtimeSchema = mongoose.Schema({
     movie: {
-        type: {type: mongoose.Schema.Types.ObjectId, ref: "Movie"}
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Movie"
     },
     time: {
         type: Date,
-        required: [true, "Show Time is required"]
+        required: [true, "Show Time is required"],
+        unique: true
     },
     room: {
-        type: Number,
+        type: String,
         required: [true, "Room/Theater is required!"]
+    },
+    price: {
+        type: Number,
+        required: [true, "Price is required!"]
     }
 });
 

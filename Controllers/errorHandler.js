@@ -35,8 +35,12 @@ const duplicateKeyErrorHandler = (error) => {
 }
 
 const validationErrorHandler = (error) => {
-    const errMsg = `${(Object.keys(error.errors))[0]} is required!`;    
+    const errMsg = `${(Object.keys(error.errors))[0]} is required!`;
     return new CustomError(errMsg, 400);
+}
+
+const tokenExpiredErrorHandler = (error) => {
+    return new CustomError("Please login", 401);
 }
 
 module.exports = (error, req, res, next) => {
@@ -49,6 +53,7 @@ module.exports = (error, req, res, next) => {
     } else if (process.env.NODE_ENV === 'production') {
         if (error.code === 11000) error = duplicateKeyErrorHandler(error);
         if (error.name === 'ValidationError') error = validationErrorHandler(error);
+        if (error.name === 'TokenExpiredError') error = tokenExpiredErrorHandler(error)
         prodError(error, res);
     }
 }

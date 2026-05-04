@@ -8,13 +8,15 @@ const authMiddleware = require(`${__dirname}/../Middlewares/authMiddleware`);
 
 const router = require('express').Router();
 
+router.use(authMiddleware);
+
 router.route('/')
-    .get(authMiddleware, movieController.getAllMovies)
-    .post(authMiddleware, authController.restrict, movieController.addMovie);
+    .get(movieController.getAllMovies)
+    .post(authController.restrict, movieController.addMovie);
 
 router.route('/:id')
-    .get(authMiddleware, movieController.getMovie)
-    .patch(authMiddleware, authController.restrict, movieController.updateMovie)
-    .delete(authMiddleware, authController.restrict, movieController.deleteMovie);
+    .get(movieController.getMovie)
+    .patch(authController.restrict, movieController.updateMovie)
+    .delete(authController.restrict, movieController.deleteMovie);
 
 module.exports = router;
