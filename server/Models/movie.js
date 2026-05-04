@@ -35,6 +35,11 @@ const movieSchema = mongoose.Schema({
     }
 });
 
+movieSchema.pre(/^find/, function () {
+    this.find({ active: { $ne: false } });
+
+});
+
 
 const Movie = mongoose.model('Movie', movieSchema);
 
