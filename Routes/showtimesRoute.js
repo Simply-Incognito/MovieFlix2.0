@@ -12,4 +12,7 @@ router.route('/')
     .post(authMiddleware, authController.restrict, showtimeController.createShowtime)
     .get(authMiddleware, showtimeController.getShowtimes);
 
+router.route('/:id/seats')
+    .get(authMiddleware, showtimeController.getShowtimeSeats);
+
 module.exports = router;

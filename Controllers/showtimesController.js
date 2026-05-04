@@ -8,7 +8,9 @@ const CustomError = require(`${__dirname}/../Utils/CustomError`);
 const Showtime = require(`${__dirname}/../Models/showtime`);
 
 const Movie = require(`${__dirname}/../Models/movie`);
+const Reservation = require(`${__dirname}/../Models/reservation`);
 
+// Admin only
 exports.createShowtime = asyncErrorHandler(async (req, res, next) => {
     // req.body -> movie/movieId, time, room, price
     const movieRef = req.body.movie;
@@ -32,6 +34,7 @@ exports.createShowtime = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
+// Users + Admin
 exports.getShowtimes = asyncErrorHandler(async (req, res, next) => {
     let filter = {};
 
@@ -65,6 +68,37 @@ exports.getShowtimes = asyncErrorHandler(async (req, res, next) => {
         status: 'success',
         count: showtimes.length,
         data: { showtimes }
+    });
+});
+
+// User + Admin
+exports.getShowtimeSeats = asyncErrorHandler(async (req, res, next) => {
+    const showtime = await Showtime.findById(req.params.id);
+
+    if (!showtime) {
+        return next(new CustomError("Showtime not found!", 404));
+    }
+
+    // Get all reservations (booked seats) for this showtime
+    const reservations = await Reservation.find({ showtime: req.params.id }).select('seat');
+    
+    const reservedSeats = reservations.map(res => res.seat);
+
+    // Generate all available seats based on capacity
+    const totalSeats = showtime.capacity || 50;
+    const availableSeats = [];
+
+    for (let i = 1; i <= totalSeats; i++) {
+        !reservedSeats.includes(i) && availableSeats.push(i);
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            totalSeats,
+            reservedSeats,
+            availableSeats
+        }
     });
 });
 

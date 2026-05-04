@@ -19,6 +19,10 @@ const showtimeSchema = mongoose.Schema({
     price: {
         type: Number,
         required: [true, "Price is required!"]
+    },
+    capacity: {
+        type: Number,
+        default: 50
     }
 });
 

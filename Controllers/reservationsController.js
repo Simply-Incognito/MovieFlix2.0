@@ -82,12 +82,12 @@ exports.cancelReservation = asyncErrorHandler(async (req, res, next) => {
     const reservation = await Reservation.findById(req.params.id);
 
     if (!reservation) {
-        return next(new CustomError("Resrevation not found!", 404));
+        return next(new CustomError("Reservation not found!", 404));
     }
 
     const showtime = await Showtime.findById(reservation.showtime);
 
-    if (showtime.time > Date.now()) {
+    if (showtime.time < Date.now()) {
         return next(new CustomError("You cannot cancel this reservation.", 400));
     }
 
