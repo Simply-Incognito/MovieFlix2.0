@@ -2,6 +2,8 @@
 
 MovieFlix 2.0 is a robust, production-ready backend system for a movie reservation service. Built with **Node.js**, **Express**, and **MongoDB**, it handles complex business logic including seat scheduling, real-time availability, and secure user management.
 
+This project is an implementation of the [Movie Reservation System](https://roadmap.sh/projects/movie-reservation-system) challenge from roadmap.sh.
+
 ---
 
 ## 🚀 Key Features
@@ -58,27 +60,42 @@ MovieFlix 2.0 is a robust, production-ready backend system for a movie reservati
 - Node.js (v16+)
 - MongoDB configured as a **Replica Set** (Required for Transactions)
 
-### Installation
-1. Clone the repository:
+### Installation & Setup
+
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/Simply-Incognito/MovieFlix2.0.git
    cd MovieFlix2.0/server
    ```
-2. Install dependencies:
+
+2. **Install dependencies:**
    ```bash
    npm install
    ```
-3. Set up your environment variables (`config.env`):
+
+3. **Environment Configuration:**
+   Create a `config.env` file in the `server` directory and add your configuration:
    ```env
    PORT=5000
    LOCAL_DB_URI=mongodb://127.0.0.1:27017/movieflix?replicaSet=rs0
    JWT_SECRET=your_super_secret_key
    JWT_EXPIRES_IN=90d
    ```
-4. Start the development server:
+
+4. **Start the server:**
+   
+   **For Development (using nodemon):**
    ```bash
    npm run dev
    ```
+   
+   **For Production:**
+   ```bash
+   npm start
+   ```
+
+> [!TIP]
+> **Automatic Seeding:** When the server starts for the first time, it will automatically create a super-admin account using the data in `data/users.json`.
 
 ---
 
@@ -114,4 +131,5 @@ MovieFlix 2.0 is a robust, production-ready backend system for a movie reservati
 
 ## 📄 License
 This project is licensed under the **ISC License**.
+
 
