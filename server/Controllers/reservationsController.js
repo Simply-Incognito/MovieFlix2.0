@@ -1,4 +1,5 @@
 "use strict";
+const mongoose = require('mongoose');
 
 const reservation = require("../Models/reservation");
 const showtime = require("../Models/showtime");
@@ -14,42 +15,45 @@ const Showtime = require(`${__dirname}/../Models/showtime`);
 
 // Users
 exports.makeReservation = asyncErrorHandler(async (req, res, next) => {
-    req.body.user = req.user._id;
 
-    // Get Showtime with particular movieId
-    const movieShowtime = await Showtime.findOne({ movie: req.body.movie });
+    // 1. Start Session
+    const session = await mongoose.startSession();
 
-    // MovieShowTime -> Movie, Time, Room, Price
+    try {
+        // 2. Start Transaction
+        await session.withTransaction(async () => {
 
-    if (!movieShowtime) {
-        return next(new CustomError("Movie is not airing at specified time.", 404));
+            req.body.user = req.user._id;
+
+            // 3. Check for existing reservation WITHIN the session
+            const testReservation = await Reservation.findOne({
+                showtime: req.body.showtime,
+                seat: req.body.seat
+            }).session(session); // <---- Attach session here -> make operation atomic
+
+            if (testReservation) {
+                throw new CustomError("Seat number is already taken!", 400);
+            }
+
+            // 4. Create reservation WITHIN the transaction
+            const reservation = await Reservation.create([req.body], { session }); // <---- Attach session here -> make operation atomic
+
+            res.status(201).json({
+                status: 'success',
+                message: "Reserved!",
+                data: { reservation }
+            });
+
+        });
+
+    } catch (error) {
+        // If error occurs, the transaction is auto aborted
+        next(error);
+
+    } finally {
+        // 5. End session (Important!)
+        await session.endSession();
     }
-
-    req.body = {
-        user: req.body.user,
-        showtime: movieShowtime._id,
-        seat: req.body.seat
-    }
-
-    //return console.log(req.body)
-
-    // Check if seat number for a particular showtime is taken
-    const testReservation = await Reservation.findOne({ showtime: req.body.showtime, seat: req.body.seat });
-
-    // If reservation with seat number exists, return error
-    if (testReservation) {
-        return next(new CustomError("Seat Number is not available!", 404));
-    }
-
-    const reservation = await Reservation.create(req.body);
-
-    // console.log(reservation)
-
-    return res.status(201).json({
-        status: 'success',
-        message: "Reservation made successfully!",
-        data: { reservation }
-    });
 });
 
 // Users
@@ -144,7 +148,7 @@ exports.getReservationsMetrics = asyncErrorHandler(async (req, res, next) => {
         totalReservations: revenueStats[0]?.totalReservations || 0,
         totalRevenue: revenueStats[0]?.totalRevenue || 0,
         totalCapacity: capacityStats[0]?.totalCapacity || 0,
-        occupancyRate: capacityStats[0]?.totalCapacity > 0 
+        occupancyRate: capacityStats[0]?.totalCapacity > 0
             ? ((revenueStats[0]?.totalReservations || 0) / capacityStats[0].totalCapacity * 100).toFixed(2) + '%'
             : '0%'
     };
