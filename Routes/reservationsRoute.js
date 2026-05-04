@@ -9,11 +9,11 @@ const authMiddleware = require(`${__dirname}/../Middlewares/authMiddleware`);
 const router = require('express').Router();
 
 router.route('/')
-    .post(authMiddleware, reservationsController.makeReservation)
-    .get(authMiddleware, reservationsController.getAllReservations);
+    .post(authMiddleware.protect, reservationsController.makeReservation)
+    .get(authMiddleware.protect, reservationsController.getAllReservations);
 
 router.route('/:id')
-    .delete(authMiddleware, reservationsController.cancelReservation);
+    .delete(authMiddleware.protect, reservationsController.cancelReservation);
 
 
 module.exports = router;

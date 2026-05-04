@@ -90,13 +90,3 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-// Restrict - RBAC -> roles(admin, user)
-exports.restrict = asyncErrorHandler(async (req, res, next) => {
-    const role = req.user.role;
-
-    if (role !== "admin") {
-        return next(new CustomError("You are not allowed to perform this action!", 403));
-    }
-
-    next();
-});

@@ -7,8 +7,7 @@ const CustomError = require(`${__dirname}/../Utils/CustomError`);
 
 // User Model
 const User = require(`${__dirname}/../Models/user`);
-
-module.exports = asyncErrorHandler(async (req, res, next) => {
+exports.protect = asyncErrorHandler(async (req, res, next) => {
     // Check if token exists
     var token;
 
@@ -50,4 +49,15 @@ module.exports = asyncErrorHandler(async (req, res, next) => {
     req.user = user;
     next(); // Call next middleware
 
+});
+
+// Restrict - RBAC -> roles(admin, user)
+exports.restrictTo = (...roles) => asyncErrorHandler(async (req, res, next) => {
+    const role = req.user.role;
+
+    if (!roles.includes(role)) {
+        return next(new CustomError("You are not allowed to perform this action!", 403));
+    }
+
+    next();
 });

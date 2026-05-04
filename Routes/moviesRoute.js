@@ -2,21 +2,17 @@
 
 const movieController = require(`${__dirname}/../Controllers/movieController`);
 
-const authController = require(`${__dirname}/../Controllers/authController`);
-
 const authMiddleware = require(`${__dirname}/../Middlewares/authMiddleware`);
 
 const router = require('express').Router();
 
-router.use(authMiddleware);
-
 router.route('/')
     .get(movieController.getAllMovies)
-    .post(authController.restrict, movieController.addMovie);
+    .post(authMiddleware.protect, authMiddleware.restrictTo('Admin'), movieController.addMovie);
 
 router.route('/:id')
     .get(movieController.getMovie)
-    .patch(authController.restrict, movieController.updateMovie)
-    .delete(authController.restrict, movieController.deleteMovie);
+    .patch(authMiddleware.protect, authMiddleware.restrictTo('Admin'), movieController.updateMovie)
+    .delete(authMiddleware.protect, authMiddleware.restrictTo('Admin'), movieController.deleteMovie);
 
 module.exports = router;
