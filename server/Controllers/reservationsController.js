@@ -95,8 +95,11 @@ exports.cancelReservation = asyncErrorHandler(async (req, res, next) => {
 
     const showtime = await Showtime.findById(reservation.showtime);
 
-    if (showtime.time < Date.now()) {
-        return next(new CustomError("You cannot cancel this reservation.", 400));
+    // Reservations can be cancelled minimum 24 hours before the showtime
+    const cancelDeadline = new Date(showtime.time.getTime() - 24 * 60 * 60 * 1000);
+
+    if (cancelDeadline < Date.now()) {
+        return next(new CustomError("You cannot cancel this reservation. It must be cancelled at least 24 hours before the showtime.", 400));
     }
 
     await Reservation.findByIdAndDelete(req.params.id);

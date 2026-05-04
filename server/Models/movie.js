@@ -35,6 +35,7 @@ const movieSchema = mongoose.Schema({
     }
 });
 
+// Filter out deactivated movies
 movieSchema.pre(/^find/, function () {
     this.find({ active: { $ne: false } });
 
