@@ -102,5 +102,58 @@ exports.cancelReservation = asyncErrorHandler(async (req, res, next) => {
 // Admin
 // See all Reservations, capacity, revenue  
 exports.getReservationsMetrics = asyncErrorHandler(async (req, res, next) => {
+    // 1. Get all reservations with populated details
+    const allReservations = await Reservation.find()
+        .populate('user', 'firstname lastname email')
+        .populate({
+            path: 'showtime',
+            populate: { path: 'movie', select: 'title' }
+        });
 
-})
+    // 2. Calculate Revenue and Total Reservations using Aggregation
+    const revenueStats = await Reservation.aggregate([
+        {
+            $lookup: {
+                from: 'showtimes', // MongoDB collection name for Showtime
+                localField: 'showtime',
+                foreignField: '_id',
+                as: 'showtimeDetails'
+            }
+        },
+        { $unwind: '$showtimeDetails' },
+        {
+            $group: {
+                _id: null,
+                totalRevenue: { $sum: '$showtimeDetails.price' },
+                totalReservations: { $sum: 1 }
+            }
+        }
+    ]);
+
+    // 3. Calculate Overall Capacity
+    const capacityStats = await Showtime.aggregate([
+        {
+            $group: {
+                _id: null,
+                totalCapacity: { $sum: '$capacity' }
+            }
+        }
+    ]);
+
+    const metrics = {
+        totalReservations: revenueStats[0]?.totalReservations || 0,
+        totalRevenue: revenueStats[0]?.totalRevenue || 0,
+        totalCapacity: capacityStats[0]?.totalCapacity || 0,
+        occupancyRate: capacityStats[0]?.totalCapacity > 0 
+            ? ((revenueStats[0]?.totalReservations || 0) / capacityStats[0].totalCapacity * 100).toFixed(2) + '%'
+            : '0%'
+    };
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            metrics,
+            reservations: allReservations
+        }
+    });
+});

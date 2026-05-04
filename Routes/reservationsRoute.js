@@ -12,8 +12,12 @@ router.route('/')
     .post(authMiddleware.protect, reservationsController.makeReservation)
     .get(authMiddleware.protect, reservationsController.getAllReservations);
 
+router.route('/metrics')
+    .get(authMiddleware.protect, authMiddleware.restrictTo('Admin'), reservationsController.getReservationsMetrics);
+
 router.route('/:id')
     .delete(authMiddleware.protect, reservationsController.cancelReservation);
+
 
 
 module.exports = router;
